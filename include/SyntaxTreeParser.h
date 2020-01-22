@@ -77,5 +77,5 @@ private:
     std::string expression;
 
     /// syntax tree root node
-    std::shared_ptr<SyntaxTreeNode> root = nullptr;
+    std::shared_ptr<SyntaxTreeNode> root;
 };
