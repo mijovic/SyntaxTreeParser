@@ -20,7 +20,10 @@ SyntaxTreeStatus SyntaxTreeParser::Evaluate()
 bool SyntaxTreeParser::createSyntaxTree()
 {
     std::stack<char> input;
-    for (const auto& c: expression) input.push(c);
+    for (const auto& c: expression)
+    {
+        if (!isspace(c)) input.push(c);
+    }
 
     char temp;
     std::stack<SyntaxTreeNode*> treeNodes;
