@@ -1,4 +1,5 @@
 #include <SyntaxTreeParser.h>
+#include <iostream>
 
 // calculates priority for given operator
 // if operator is invalid 0 will be returned
@@ -33,9 +34,10 @@ bool SyntaxTreeParser::createSyntaxTree()
     {
         temp = input.top();
         input.pop();
+
         if (isdigit(temp)) treeNodes.push(new SyntaxTreeNode(temp));
-        if (temp == ')') operators.push(new SyntaxTreeNode(temp));
-        if (isBinaryOp(temp))
+        else if (temp == ')') operators.push(new SyntaxTreeNode(temp));
+        else if (isBinaryOp(temp))
         {
             if (input.empty() || isBinaryOp(input.top())) return false;
             bool pushed = false;
@@ -59,8 +61,7 @@ bool SyntaxTreeParser::createSyntaxTree()
                 else if (!attachOperator(treeNodes,operators)) return false;
             }
         }
-
-        if (temp=='(')
+        else if (temp == '(')
         {
             while (!operators.empty() && operators.top()->value != ')')
             {
@@ -68,6 +69,7 @@ bool SyntaxTreeParser::createSyntaxTree()
             }
             operators.pop();
         }
+        else return false;
     }
 
     while(!operators.empty())
