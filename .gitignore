@@ -31,5 +31,6 @@
 *.out
 *.app
 
-#Build directory
-*build/
+#Build and CLion dirs
+*build*/
+*.idea/
