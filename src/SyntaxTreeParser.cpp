@@ -11,7 +11,7 @@ int SyntaxTreeParser::precedence(char op)
 };
 
 // does parsing and evaluating of given expression
-SyntaxTreeStatus SyntaxTreeParser::Evaluate()
+SyntaxTreeStatus SyntaxTreeParser::evaluate()
 {
     if (createSyntaxTree()) return { true, evaluateTree(root) };
     return { false, 0 };
@@ -27,16 +27,16 @@ bool SyntaxTreeParser::createSyntaxTree()
     }
 
     char temp;
-    std::stack<SyntaxTreeNode*> treeNodes;
-    std::stack<SyntaxTreeNode*> operators;
+    std::stack<std::shared_ptr<SyntaxTreeNode>> treeNodes;
+    std::stack<std::shared_ptr<SyntaxTreeNode>> operators;
 
     while (!input.empty())
     {
         temp = input.top();
         input.pop();
 
-        if (isdigit(temp)) treeNodes.push(new SyntaxTreeNode(temp));
-        else if (temp == ')') operators.push(new SyntaxTreeNode(temp));
+        if (isdigit(temp)) treeNodes.push(std::make_shared<SyntaxTreeNode>(temp));
+        else if (temp == ')') operators.push(std::make_shared<SyntaxTreeNode>(temp));
         else if (isBinaryOp(temp))
         {
             if (input.empty() || isBinaryOp(input.top())) return false;
@@ -45,17 +45,17 @@ bool SyntaxTreeParser::createSyntaxTree()
             {
                 if (operators.empty())
                 {
-                    operators.push(new SyntaxTreeNode(temp));
+                    operators.push(std::make_shared<SyntaxTreeNode>(temp));
                     pushed = true;
                 }
                 else if (operators.top()->value ==')')
                 {
-                    operators.push(new SyntaxTreeNode(temp));
+                    operators.push(std::make_shared<SyntaxTreeNode>(temp));
                     pushed = true;
                 }
                 else if (precedence(temp) >= precedence(operators.top()->value))
                 {
-                    operators.push(new SyntaxTreeNode(temp));
+                    operators.push(std::make_shared<SyntaxTreeNode>(temp));
                     pushed = true;
                 }
                 else if (!attachOperator(treeNodes,operators)) return false;
@@ -67,6 +67,7 @@ bool SyntaxTreeParser::createSyntaxTree()
             {
                 if(!attachOperator(treeNodes, operators)) return false;
             }
+            if (operators.empty()) return false;
             operators.pop();
         }
         else return false;
@@ -84,7 +85,7 @@ bool SyntaxTreeParser::createSyntaxTree()
 
 // if node is literal just return it
 // if node is operator return eval(left) op eval(right)
-int SyntaxTreeParser::evaluateTree(SyntaxTreeNode *node)
+int SyntaxTreeParser::evaluateTree(std::shared_ptr<SyntaxTreeNode> node)
 {
     int first, second, result;
     if (isBinaryOp(node->value))
@@ -100,11 +101,12 @@ int SyntaxTreeParser::evaluateTree(SyntaxTreeNode *node)
 // pops operator from a stack
 // builds tree node with the top two nodes in the
 // treeNode stack as its left and right children.
-bool SyntaxTreeParser::attachOperator(std::stack<SyntaxTreeNode*>& treeNodes, std::stack<SyntaxTreeNode*>& operators)
+bool SyntaxTreeParser::attachOperator(std::stack<std::shared_ptr<SyntaxTreeNode>>& treeNodes,
+    std::stack<std::shared_ptr<SyntaxTreeNode>>& operators)
 {
     if (operators.empty() || treeNodes.size() < 2) return false;
 
-    SyntaxTreeNode* operatorNode = operators.top();
+    auto operatorNode = operators.top();
     operators.pop();
     operatorNode->left = treeNodes.top();
     treeNodes.pop();

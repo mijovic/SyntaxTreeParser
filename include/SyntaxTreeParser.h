@@ -3,11 +3,12 @@
 #include <string>
 #include <unordered_map>
 #include <stack>
+#include <memory>
 
 /// Status of parsing and evaluating
 struct SyntaxTreeStatus {
     /// if expression is valid based on rules defined
-    bool Valid = false;
+    bool valid = false;
 
     /// numeric value of expression
     int Value = 0;
@@ -20,11 +21,11 @@ struct SyntaxTreeNode
     char value;
 
     /// left and right child in case of operand, literals are leafs and have both set to null
-    SyntaxTreeNode* left, *right;
+    std::shared_ptr<SyntaxTreeNode> left, right;
 
     /// Constructor for node
     /// \param v value of node - can be operand or literal
-    explicit SyntaxTreeNode(char v) : value(v), left(nullptr), right(nullptr) {}
+    explicit SyntaxTreeNode(char v) : value(v) {}
 };
 
 /// Syntax parser class to be used as proxy to parsing and evaluating
@@ -36,7 +37,7 @@ public:
 
     /// Evaluetes given expression
     /// \return status of evaluation
-    SyntaxTreeStatus Evaluate();
+    SyntaxTreeStatus evaluate();
 
 private:
     /// Creates syntax tree based on expression
@@ -47,7 +48,8 @@ private:
     /// \param treeNodes syntax tree nodes
     /// \param operators operator nodes
     /// \return if operation can be executed, if false expression is invalid
-    bool attachOperator(std::stack<SyntaxTreeNode*>& treeNodes, std::stack<SyntaxTreeNode*>& operators);
+    bool attachOperator(std::stack<std::shared_ptr<SyntaxTreeNode>>& treeNodes,
+                        std::stack<std::shared_ptr<SyntaxTreeNode>>& operators);
 
     /// Calculate priority of operator
     /// \param op operator as char
@@ -69,11 +71,11 @@ private:
     /// Recursive function to evaluate valid expression value
     /// \param node root node of syntax tree
     /// \return value of expression
-    static int evaluateTree(SyntaxTreeNode* node);
+    static int evaluateTree(std::shared_ptr<SyntaxTreeNode> node);
 
     /// given expression
     std::string expression;
 
     /// syntax tree root node
-    SyntaxTreeNode* root = nullptr;
+    std::shared_ptr<SyntaxTreeNode> root = nullptr;
 };
