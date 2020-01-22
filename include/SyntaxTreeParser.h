@@ -17,11 +17,11 @@ struct SyntaxTreeStatus {
 /// Abstract Syntax Tree Node
 struct SyntaxTreeNode
 {
-    /// value of node - can be literal or operand
-    char value;
-
     /// left and right child in case of operand, literals are leafs and have both set to null
     std::shared_ptr<SyntaxTreeNode> left, right;
+
+    /// value of node - can be literal or operand
+    char value;
 
     /// Constructor for node
     /// \param v value of node - can be operand or literal
