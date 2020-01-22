@@ -8,7 +8,7 @@ TEST_CASE("ValidInput")
         SyntaxTreeParser tree("(4 + 5 * (7 - 3)) - 2");
         SyntaxTreeStatus status = tree.evaluate();
         CHECK_FALSE(!status.valid);
-        CHECK_EQ(status.Value, 22);
+        CHECK_EQ(status.value, 22);
     }
 
     SUBCASE("NoSpacesNoBrackets")
@@ -16,7 +16,7 @@ TEST_CASE("ValidInput")
         SyntaxTreeParser tree("4+5+7/2");
         SyntaxTreeStatus status = tree.evaluate();
         CHECK_FALSE(!status.valid);
-        CHECK_EQ(status.Value, 12);
+        CHECK_EQ(status.value, 12);
     }
 
     SUBCASE("SingleLiteral")
@@ -24,7 +24,7 @@ TEST_CASE("ValidInput")
         SyntaxTreeParser tree("7");
         SyntaxTreeStatus status = tree.evaluate();
         CHECK_FALSE(!status.valid);
-        CHECK_EQ(status.Value, 7);
+        CHECK_EQ(status.value, 7);
     }
 
     SUBCASE("SingleLiteralInBrackets")
@@ -32,6 +32,6 @@ TEST_CASE("ValidInput")
         SyntaxTreeParser tree("(9)");
         SyntaxTreeStatus status = tree.evaluate();
         CHECK_FALSE(!status.valid);
-        CHECK_EQ(status.Value, 9);
+        CHECK_EQ(status.value, 9);
     }
 }

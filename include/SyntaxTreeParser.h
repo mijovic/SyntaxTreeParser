@@ -11,7 +11,7 @@ struct SyntaxTreeStatus {
     bool valid = false;
 
     /// numeric value of expression
-    int Value = 0;
+    int value = 0;
 };
 
 /// Abstract Syntax Tree Node
