@@ -1,19 +1,17 @@
-name: Move new issues into Solidity project board
+name: "Default Project"
 
 on:
   issues:
-    types: [opened]
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    types:
+      - opened
 
 jobs:
-  assign_one_project:
+  add_to_project:
     runs-on: ubuntu-latest
-    name: Move new issues into Solidity project board
     steps:
-    - name: Assign New issues to Solidity project
-      uses: srggrs/assign-one-project-github-action@1.2.0
-      if: github.event.action == 'opened'
-      with:
-        project: 'https://github.com/mijovic/SyntaxTreeParser/projects/1'
-        column_name: 'New issues'
+      - uses: skeet70/default-project-board-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          issue: ${{ github.event.issue.number }}
+          project: 1
