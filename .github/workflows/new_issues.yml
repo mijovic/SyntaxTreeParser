@@ -16,3 +16,4 @@ jobs:
       if: github.event.action == 'opened'
       with:
         project: 'https://github.com/mijovic/SyntaxTreeParser/projects/1'
+        column_name: 'New issues'
